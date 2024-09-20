@@ -1,4 +1,4 @@
-WSTemplateFormatVersion: 2010-09-09
+AWSTemplateFormatVersion: 2010-09-09
 Description: |
   This CloudFormation Template was written for running Kittens Carousel Static Website on EC2.
   Kittens Carousel Static Website will be deployed on Amazon Linux 2023 (latestamiid) EC2 Instance with
@@ -9,14 +9,14 @@ Parameters:
   KeyPair:
     Description: Select your keypair
     Type: AWS::EC2::KeyPair::KeyName
-    Default: okt-aws
+    Default: mustafaaws
   InstanceType:
     Description: Select your instance type
     Type: String
     Default: t2.micro
     AllowedValues:
-    - t2.micro
-    - t3.micro
+      - t2.micro
+      - t3.micro
   LatestAmiId:
     Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
     Default: '/aws/service/ami-amazon-linux-latest/al2023-ami-minimal-kernel-default-x86_64'
@@ -26,14 +26,14 @@ Resources:
     Properties:
       GroupDescription: Allows 22 and 80 port
       SecurityGroupIngress:
-      - IpProtocol: tcp
-        FromPort: 22
-        ToPort: 22
-        CidrIp: 0.0.0.0/0
-      - IpProtocol: tcp
-        FromPort: 80
-        ToPort: 80
-        CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
   WebServerKittens:
     Type: AWS::EC2::Instance
     Properties:
@@ -41,26 +41,25 @@ Resources:
       InstanceType: !Ref InstanceType
       KeyName: !Ref KeyPair
       SecurityGroupIds:
-      - !Ref MySecGrp
+        - !Ref MySecGrp
       Tags:
-      - Key: Name
-        Value: !Sub Web Server of ${AWS::StackName}
+        - Key: Name
+          Value: !Sub Web Server of ${AWS::StackName}
       UserData: !Base64 |
         #! /bin/bash
         yum update -y
         yum install httpd -y
-        FOLDER="https://github.com/mustafa010223/aws-proje-3.git"
+        FOLDER="https://raw.githubusercontent.com/mustafa010223/aws-proje-3/main"
         cd /var/www/html
         wget $FOLDER/index.html
         wget $FOLDER/cat0.jpg
         wget $FOLDER/cat1.jpg
         wget $FOLDER/cat2.jpg
-        wget $FOLDER/cat3.png
         systemctl start httpd
         systemctl enable httpd
 Outputs:
   WebSiteURL:
     Value: !Sub
-    - http://${PublicAddress}
-    - PublicAddress: !GetAtt WebServerKittens.PublicDnsName
+      - http://${PublicAddress}
+      - PublicAddress: !GetAtt WebServerKittens.PublicDnsName
 
