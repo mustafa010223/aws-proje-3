@@ -49,7 +49,7 @@ Resources:
         #! /bin/bash
         yum update -y
         yum install httpd -y
-        FOLDER="https://raw.githubusercontent.com/okti3535/aws-projects-de09/main/101-kittens-carousel-static-website-ec2/static-web"
+        FOLDER="https://github.com/mustafa010223/aws-proje-3.git"
         cd /var/www/html
         wget $FOLDER/index.html
         wget $FOLDER/cat0.jpg
